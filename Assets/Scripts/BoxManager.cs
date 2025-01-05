@@ -26,12 +26,12 @@ public class BoxManager : MonoBehaviour
     private void Awake()
     {
         _gridManager = GameObject.Find("GridManager").GetComponent<GridManager>();
+        _column = Convert.ToInt32(transform.position.x);
+        _row = Convert.ToInt32(transform.position.y);
     }
 
     private void OnMouseDown()
     {
-        _column = Convert.ToInt32(transform.position.x);
-        _row = Convert.ToInt32(transform.position.y);
         _gridManager.ClickListenerHelp(this, _row, _column, colorNumber);
     }
 }

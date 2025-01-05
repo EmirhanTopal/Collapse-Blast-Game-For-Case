@@ -9,18 +9,20 @@ using Random = Unity.Mathematics.Random;
 
 public class GridManager : MonoBehaviour
 {
-    private static int _rows = 10;
-    private static int _columns = 10;
     [SerializeField] private List<GameObject> gridBackground = new List<GameObject>();
-    //private int[,] _customGrid = new int[_rows, _columns];
-    private List<GameObject> gridBox = new List<GameObject>();
-    HashSet<BoxManager> colorBoxHash = new HashSet<BoxManager>();
+    private List<GameObject> _gridBox = new List<GameObject>();
+    private HashSet<BoxManager> _colorBoxHash = new HashSet<BoxManager>();
+    private HashSet<BoxManager> _visitedBoxHash = new HashSet<BoxManager>();
+    
+    private static int _rows = 6;
+    private static int _columns = 6;
     private void Start()
     {
-        DrawGrid();
+        InitialGrid();
+        IntBoxGroupHelp();
     }
     
-    private void DrawGrid()
+    private void InitialGrid()
     {
         int gridRow = 0;
         while (gridRow < _rows)
@@ -31,7 +33,7 @@ public class GridManager : MonoBehaviour
                 Vector2 v2 = new Vector2(gridRow, gridColumn);
                 
                 GameObject gridGo = Instantiate(gridBackground[UnityEngine.Random.Range(0, gridBackground.Count)],v2, quaternion.identity);
-                gridBox.Add(gridGo);
+                _gridBox.Add(gridGo);
                 gridColumn++;
             }
             gridRow++;
@@ -40,25 +42,24 @@ public class GridManager : MonoBehaviour
 
     public void ClickListenerHelp(BoxManager boxManager, int row, int column, int colorNumber)
     {
-        colorBoxHash.Clear();
-        colorBoxHash = ClickListenerBoxManager(boxManager, row, column, colorNumber, colorBoxHash);
-        foreach (var cbh in colorBoxHash)
+        _colorBoxHash = ClickListenerBoxManager(boxManager, row, column, colorNumber, _colorBoxHash);
+        foreach (var cbh in _colorBoxHash)
         {
-            if (colorBoxHash.Count > 1)
+            if (_colorBoxHash.Count > 1)
             {
-                Debug.Log(cbh.Row + "," + cbh.Column);
-                gridBox.Remove(cbh.gameObject);
+                _gridBox.Remove(cbh.gameObject);
                 Destroy(cbh.gameObject);
             }
         }
-        colorBoxHash.Clear();
+        _colorBoxHash.Clear();
+        IntBoxGroupHelp();
     }
     
     private HashSet<BoxManager> ClickListenerBoxManager(BoxManager boxManager, int row, int column, int colorNumber, HashSet<BoxManager> hashSet)
     {
         if (!hashSet.Contains(boxManager))
             hashSet.Add(boxManager);
-        foreach (var grid in gridBox)
+        foreach (var grid in _gridBox)
         {
             var neighbor = grid.GetComponent<BoxManager>();
             if (neighbor == null || hashSet.Contains(neighbor))
@@ -66,34 +67,76 @@ public class GridManager : MonoBehaviour
             if (Mathf.Approximately(grid.transform.position.x, column) && Mathf.Approximately(grid.transform.position.y, row - 1) && colorNumber == neighbor.ColorNumber)
             {
                 hashSet.Add(neighbor);
-                Debug.Log("altında var");
-                Debug.Log($"{boxManager.Row}, {boxManager.Column}");
-                ClickListenerBoxManager(grid.GetComponent<BoxManager>(), row - 1, column, colorNumber, hashSet);
+                ClickListenerBoxManager(neighbor, row - 1, column, colorNumber, hashSet);
             }
             if (Mathf.Approximately(grid.transform.position.x, column) && Mathf.Approximately(grid.transform.position.y, row + 1) && colorNumber == neighbor.ColorNumber)
             {
                 hashSet.Add(neighbor);
-                Debug.Log("üstünde var");
-                Debug.Log($"{boxManager.Row}, {boxManager.Column}");
-                ClickListenerBoxManager(grid.GetComponent<BoxManager>(), row + 1, column, colorNumber, hashSet);
+                ClickListenerBoxManager(neighbor, row + 1, column, colorNumber, hashSet);
             }
             if (Mathf.Approximately(grid.transform.position.x, column + 1) && Mathf.Approximately(grid.transform.position.y, row) && colorNumber == neighbor.ColorNumber)
             {
                 hashSet.Add(neighbor);
-                Debug.Log("sağında var");
-                Debug.Log($"{boxManager.Row}, {boxManager.Column}");
-                ClickListenerBoxManager(grid.GetComponent<BoxManager>(), row, column + 1, colorNumber, hashSet);
+                ClickListenerBoxManager(neighbor, row, column + 1, colorNumber, hashSet);
             }
             if (Mathf.Approximately(grid.transform.position.x, column - 1) && Mathf.Approximately(grid.transform.position.y, row) && colorNumber == neighbor.ColorNumber)
             { 
                 hashSet.Add(neighbor);
-                Debug.Log("solunda var");
-                Debug.Log($"{boxManager.Row}, {boxManager.Column}");
-                ClickListenerBoxManager(grid.GetComponent<BoxManager>(), row, column - 1, colorNumber, hashSet);
+                ClickListenerBoxManager(neighbor, row, column - 1, colorNumber, hashSet);
             }
         }
-
         return hashSet;
+    }
+
+    private void IntBoxGroupHelp()
+    {
+        _visitedBoxHash.Clear();
+        
+        HashSet<BoxManager> tempHash = new HashSet<BoxManager>();
+        foreach (var gridHelp in _gridBox)
+        {
+            var officialGridHelp = gridHelp.GetComponent<BoxManager>();
+            tempHash = IntBoxGroup(officialGridHelp, officialGridHelp.Row, officialGridHelp.Column, officialGridHelp.ColorNumber, tempHash, _visitedBoxHash); //c
+            Debug.Log(tempHash.Count);
+            tempHash.Clear();
+        }
+
+    }
+    private HashSet<BoxManager> IntBoxGroup(BoxManager boxManager, int row, int column, int colorNumber, HashSet<BoxManager> hashSet2, HashSet<BoxManager> visitedHash)
+    {
+        if (visitedHash.Contains(boxManager))
+            return hashSet2;
+        if (!hashSet2.Contains(boxManager))
+            hashSet2.Add(boxManager);
+        foreach (var grid in _gridBox)
+        {
+            var neighbor = grid.GetComponent<BoxManager>();
+            if (Mathf.Approximately(grid.transform.position.x, column) && Mathf.Approximately(grid.transform.position.y, row - 1) && colorNumber == neighbor.ColorNumber)
+            {
+                hashSet2.Add(neighbor);
+                visitedHash.Add(boxManager);
+                IntBoxGroup(neighbor, row - 1, column, colorNumber, hashSet2, visitedHash);
+            }
+            if (Mathf.Approximately(grid.transform.position.x, column) && Mathf.Approximately(grid.transform.position.y, row + 1) && colorNumber == neighbor.ColorNumber)
+            {
+                hashSet2.Add(neighbor);
+                visitedHash.Add(boxManager);
+                IntBoxGroup(neighbor, row + 1, column, colorNumber, hashSet2, visitedHash);
+            }
+            if (Mathf.Approximately(grid.transform.position.x, column + 1) && Mathf.Approximately(grid.transform.position.y, row) && colorNumber == neighbor.ColorNumber)
+            {
+                hashSet2.Add(neighbor);
+                visitedHash.Add(boxManager);
+                IntBoxGroup(neighbor, row, column + 1, colorNumber, hashSet2, visitedHash);
+            }
+            if (Mathf.Approximately(grid.transform.position.x, column - 1) && Mathf.Approximately(grid.transform.position.y, row) && colorNumber == neighbor.ColorNumber)
+            { 
+                hashSet2.Add(neighbor);
+                visitedHash.Add(boxManager);
+                IntBoxGroup(neighbor, row, column - 1, colorNumber, hashSet2, visitedHash);
+            }
+        }
+        return hashSet2;
     }
     
 }
