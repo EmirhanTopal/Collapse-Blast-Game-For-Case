@@ -22,6 +22,8 @@ public class GridManager : MonoBehaviour
     [SerializeField] private int changeA;
     [SerializeField] private int changeB;
     [SerializeField] private int changeC;
+
+    private int _changingSpeed = 100;
     public int ChangeA
     {
         get { return changeA; }
@@ -43,7 +45,7 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
-        NewGridBox();
+        //MoveObjects();
         IntBoxGroupHelp(); // optimizasyon için bakılacak.
     }
 
@@ -56,7 +58,6 @@ public class GridManager : MonoBehaviour
             while (gridColumn < _gridColumns)
             {
                 Vector2 v2 = new Vector2(gridRow, gridColumn);
-                
                 GameObject gridGo = Instantiate(gridBackground[Random.Range(0, gridBackground.Count)],v2, quaternion.identity);
                 _gridBox.Add(gridGo);
                 gridColumn++;
@@ -82,7 +83,8 @@ public class GridManager : MonoBehaviour
     {
         DestroyGroup(boxManager,row,column,colorNumber);
         _colorBoxHash.Clear();
-        FallBox();
+        FallBoxMain();
+        NewGridBoxMain();
         IntBoxGroupHelp();
     }
     
@@ -209,8 +211,8 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-
-    private void FallBox()
+    
+    private void FallBoxMain()
     {
         bool flag = true;
         while (flag)
@@ -227,15 +229,13 @@ public class GridManager : MonoBehaviour
                     if (gridPosY - 1 == grid2PosY && gridPosX == grid2PosX)
                     {
                         flag2 = false;
-                        break;
                     }
                 }
                 if (flag2 && gridPosY > 0)
                 {
                     flag = true;
                     Vector2 targetV2 = new Vector2(grid.transform.position.x, grid.transform.position.y - 1);
-                    StartCoroutine(FallBoxIE(grid, targetV2, 100));
-                    break;
+                    StartCoroutine(FallBoxReachTargetIE(grid, targetV2, 1));
                 }
                 else
                     flag = false;
@@ -243,11 +243,12 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    IEnumerator FallBoxIE(GameObject gridGo, Vector2 gridTargetV2, int speed)
+    IEnumerator FallBoxReachTargetIE(GameObject gridGo, Vector2 gridTargetV2, int speed)
     {
+        
         while (gridGo && Vector2.Distance(gridGo.transform.position, gridTargetV2) > 0.01f)
         {
-            gridGo.transform.position = Vector2.Lerp(gridGo.transform.position,gridTargetV2,Time.deltaTime * speed);
+            gridGo.transform.position = Vector2.Lerp(gridGo.transform.position,gridTargetV2, speed);
             yield return null;
         }
 
@@ -257,8 +258,9 @@ public class GridManager : MonoBehaviour
         }
     }
     
-    private void NewGridBox()
+    private void NewGridBoxMain()
     {
+        List<GameObject> addBox = new List<GameObject>();
         for (int row = 0; row < _gridRows; row++)
         {
             for (int column = 0; column < _gridColumns; column++)
@@ -271,23 +273,34 @@ public class GridManager : MonoBehaviour
                     if (gridPosX == column && gridPosY == row)
                     {
                         flag = true;
-                        break;
                     }
                 }
                 if (!flag)
                 {
-                    Vector2 newV2 = new Vector2(column, row);
+                    Vector2 newV2 = new Vector2(column, row + 4);
                     GameObject gridGo = Instantiate(gridBackground[Random.Range(0, gridBackground.Count)], newV2, quaternion.identity);
+                    addBox.Add(gridGo);
                     _gridBox.Add(gridGo);
-                    break;
                 }
             }
-            
         }
-    }
+        for (int i = 0; i < 4; i++)
+        {
+            foreach (var aGameObject in addBox)
+            {
+                if (aGameObject != null)
+                {
+                    int gridGoY = Convert.ToInt32(aGameObject.transform.position.y);
+                    int gridGoY2 = Convert.ToInt32(aGameObject.transform.position.y);
+                    Vector3 gridMyGo = new Vector2(aGameObject.transform.position.x, aGameObject.transform.position.y - 1);
+                    if (gridGoY >= gridGoY2 - 4)
+                    {
+                        aGameObject.transform.position = gridMyGo;
+                        gridGoY -= 1;
+                    }
+                } 
+            }
+        }
 
-    private IEnumerator NewBoxIE()
-    {
-        
-    }    
+    }
 }
