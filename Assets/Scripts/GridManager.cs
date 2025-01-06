@@ -4,18 +4,37 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = Unity.Mathematics.Random;
 
 public class GridManager : MonoBehaviour
 {
     [SerializeField] private List<GameObject> gridBackground = new List<GameObject>();
+    [SerializeField] private BoxFeatures features;
     private List<GameObject> _gridBox = new List<GameObject>();
     private HashSet<BoxManager> _colorBoxHash = new HashSet<BoxManager>();
     private HashSet<BoxManager> _visitedBoxHash = new HashSet<BoxManager>();
     
-    private static int _rows = 6;
-    private static int _columns = 6;
+    private static int _rows = 12;
+    private static int _columns = 12;
+    
+    [SerializeField] private int changeA;
+    [SerializeField] private int changeB;
+    [SerializeField] private int changeC;
+    public int ChangeA
+    {
+        get { return changeA; }
+    }
+    public int ChangeB
+    {
+        get { return changeB; }
+    }
+    public int ChangeC
+    {
+        get { return changeC; }
+    }
+    
     private void Start()
     {
         InitialGrid();
@@ -40,7 +59,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void ClickListenerHelp(BoxManager boxManager, int row, int column, int colorNumber)
+    private void DestroyGroup(BoxManager boxManager, int row, int column, int colorNumber)
     {
         _colorBoxHash = ClickListenerBoxManager(boxManager, row, column, colorNumber, _colorBoxHash);
         foreach (var cbh in _colorBoxHash)
@@ -51,8 +70,15 @@ public class GridManager : MonoBehaviour
                 Destroy(cbh.gameObject);
             }
         }
+    }
+    
+    public void ClickListenerHelp(BoxManager boxManager, int row, int column, int colorNumber)
+    {
+        DestroyGroup(boxManager,row,column,colorNumber);
         _colorBoxHash.Clear();
-        IntBoxGroupHelp();
+        // aşşağı kayma
+        // box eklenme
+        IntBoxGroupHelp(); // grup güncellemesi
     }
     
     private HashSet<BoxManager> ClickListenerBoxManager(BoxManager boxManager, int row, int column, int colorNumber, HashSet<BoxManager> hashSet)
@@ -93,14 +119,15 @@ public class GridManager : MonoBehaviour
         _visitedBoxHash.Clear();
         
         HashSet<BoxManager> tempHash = new HashSet<BoxManager>();
-        foreach (var gridHelp in _gridBox)
+        List<GameObject> copyGridBox = new List<GameObject>(_gridBox);
+        foreach (var copyGridHelp in copyGridBox)
         {
-            var officialGridHelp = gridHelp.GetComponent<BoxManager>();
-            tempHash = IntBoxGroup(officialGridHelp, officialGridHelp.Row, officialGridHelp.Column, officialGridHelp.ColorNumber, tempHash, _visitedBoxHash); //c
-            Debug.Log(tempHash.Count);
+            var officialGridHelp = copyGridHelp.GetComponent<BoxManager>();
+            tempHash = IntBoxGroup(officialGridHelp, officialGridHelp.Row, officialGridHelp.Column, officialGridHelp.ColorNumber, tempHash, _visitedBoxHash);
+            ChangeShape(tempHash);
             tempHash.Clear();
         }
-
+        
     }
     private HashSet<BoxManager> IntBoxGroup(BoxManager boxManager, int row, int column, int colorNumber, HashSet<BoxManager> hashSet2, HashSet<BoxManager> visitedHash)
     {
@@ -138,5 +165,36 @@ public class GridManager : MonoBehaviour
         }
         return hashSet2;
     }
-    
+
+    private void ChangeShape(HashSet<BoxManager> tempHash)
+    {
+        int hashCount = tempHash.Count;
+        
+        foreach (var tempBox in tempHash)
+        {
+            Vector2 newAVector2 = new Vector2(tempBox.transform.position.x, tempBox.transform.position.y);
+            int tempColorNumber = tempBox.ColorNumber;
+            if (hashCount >= ChangeA && hashCount < ChangeB)
+            {
+                GameObject newA = Instantiate(features.Ateam[tempColorNumber - 1], newAVector2, quaternion.identity);
+                _gridBox.Add(newA);
+                _gridBox.Remove(tempBox.gameObject);
+                Destroy(tempBox.gameObject);
+            }
+            else if (hashCount >= ChangeB && hashCount < ChangeC)
+            {
+                GameObject newB = Instantiate(features.Bteam[tempColorNumber - 1], newAVector2, quaternion.identity);
+                _gridBox.Add(newB);
+                _gridBox.Remove(tempBox.gameObject);
+                Destroy(tempBox.gameObject);
+            }
+            else if (hashCount >= ChangeC)
+            {
+                GameObject newC = Instantiate(features.Cteam[tempColorNumber - 1], newAVector2, quaternion.identity);
+                _gridBox.Add(newC);
+                _gridBox.Remove(tempBox.gameObject);
+                Destroy(tempBox.gameObject);
+            }
+        }
+    }
 }
