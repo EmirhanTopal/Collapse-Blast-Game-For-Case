@@ -16,6 +16,7 @@ public class GridManager : MonoBehaviour
     private HashSet<BoxManager> _colorBoxHash = new HashSet<BoxManager>();
     private HashSet<BoxManager> _visitedBoxHash = new HashSet<BoxManager>();
     
+    
     private static int _gridRows = 4;
     private static int _gridColumns = 4;
     
@@ -261,6 +262,7 @@ public class GridManager : MonoBehaviour
     private void NewGridBoxMain()
     {
         List<GameObject> addBox = new List<GameObject>();
+        addBox.Clear();
         for (int row = 0; row < _gridRows; row++)
         {
             for (int column = 0; column < _gridColumns; column++)
@@ -284,23 +286,30 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+
+        StartCoroutine(UpdateGridBoxPositions(addBox));
+    }
+
+    private IEnumerator UpdateGridBoxPositions(List<GameObject> addBox)
+    {
         for (int i = 0; i < 4; i++)
         {
-            foreach (var aGameObject in addBox)
+            yield return new WaitForSeconds(1f);  // Her iterasyon arasında 1 saniye bekle
+        
+            HelpNewGridBox(addBox); // Pozisyon güncellemeyi burada çağır
+        }
+    }
+
+    void HelpNewGridBox(List<GameObject> myAddBox)
+    {
+        foreach (var aGameObject in myAddBox)
+        {
+            if (aGameObject != null)
             {
-                if (aGameObject != null)
-                {
-                    int gridGoY = Convert.ToInt32(aGameObject.transform.position.y);
-                    int gridGoY2 = Convert.ToInt32(aGameObject.transform.position.y);
-                    Vector3 gridMyGo = new Vector2(aGameObject.transform.position.x, aGameObject.transform.position.y - 1);
-                    if (gridGoY >= gridGoY2 - 4)
-                    {
-                        aGameObject.transform.position = gridMyGo;
-                        gridGoY -= 1;
-                    }
-                } 
+                Debug.Log("sa"); // buraya girmiyor - invoke dene
+                Vector3 gridMyGo = new Vector3(aGameObject.transform.position.x, aGameObject.transform.position.y - 1, aGameObject.transform.position.z);
+                aGameObject.transform.position = gridMyGo;
             }
         }
-
     }
 }
