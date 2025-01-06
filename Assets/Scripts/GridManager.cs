@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GridManager : MonoBehaviour
 {
@@ -15,8 +16,8 @@ public class GridManager : MonoBehaviour
     private HashSet<BoxManager> _colorBoxHash = new HashSet<BoxManager>();
     private HashSet<BoxManager> _visitedBoxHash = new HashSet<BoxManager>();
     
-    private static int _rows = 4;
-    private static int _columns = 4;
+    private static int _gridRows = 4;
+    private static int _gridColumns = 4;
     
     [SerializeField] private int changeA;
     [SerializeField] private int changeB;
@@ -42,20 +43,21 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
+        NewGridBox();
         IntBoxGroupHelp(); // optimizasyon için bakılacak.
     }
 
     private void InitialGrid()
     {
         int gridRow = 0;
-        while (gridRow < _rows)
+        while (gridRow < _gridRows)
         {
             int gridColumn = 0;
-            while (gridColumn < _columns)
+            while (gridColumn < _gridColumns)
             {
                 Vector2 v2 = new Vector2(gridRow, gridColumn);
                 
-                GameObject gridGo = Instantiate(gridBackground[UnityEngine.Random.Range(0, gridBackground.Count)],v2, quaternion.identity);
+                GameObject gridGo = Instantiate(gridBackground[Random.Range(0, gridBackground.Count)],v2, quaternion.identity);
                 _gridBox.Add(gridGo);
                 gridColumn++;
             }
@@ -81,8 +83,7 @@ public class GridManager : MonoBehaviour
         DestroyGroup(boxManager,row,column,colorNumber);
         _colorBoxHash.Clear();
         FallBox();
-        // box eklenme
-        IntBoxGroupHelp(); // grup güncellemesi
+        IntBoxGroupHelp();
     }
     
     private HashSet<BoxManager> ClickListenerBoxManager(BoxManager boxManager, int row, int column, int colorNumber, HashSet<BoxManager> hashSet)
@@ -255,4 +256,38 @@ public class GridManager : MonoBehaviour
             gridGo.transform.position = gridTargetV2;
         }
     }
+    
+    private void NewGridBox()
+    {
+        for (int row = 0; row < _gridRows; row++)
+        {
+            for (int column = 0; column < _gridColumns; column++)
+            {
+                bool flag = false;
+                foreach (var grid in _gridBox)
+                {
+                    int gridPosX = Convert.ToInt32(grid.transform.position.x);
+                    int gridPosY = Convert.ToInt32(grid.transform.position.y);
+                    if (gridPosX == column && gridPosY == row)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                {
+                    Vector2 newV2 = new Vector2(column, row);
+                    GameObject gridGo = Instantiate(gridBackground[Random.Range(0, gridBackground.Count)], newV2, quaternion.identity);
+                    _gridBox.Add(gridGo);
+                    break;
+                }
+            }
+            
+        }
+    }
+
+    private IEnumerator NewBoxIE()
+    {
+        
+    }    
 }
