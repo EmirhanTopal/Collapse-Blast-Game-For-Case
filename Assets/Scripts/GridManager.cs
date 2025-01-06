@@ -6,7 +6,6 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Random = Unity.Mathematics.Random;
 
 public class GridManager : MonoBehaviour
 {
@@ -40,7 +39,12 @@ public class GridManager : MonoBehaviour
         InitialGrid();
         IntBoxGroupHelp();
     }
-    
+
+    private void Update()
+    {
+        IntBoxGroupHelp(); // optimizasyon için bakılacak.
+    }
+
     private void InitialGrid()
     {
         int gridRow = 0;
@@ -195,6 +199,13 @@ public class GridManager : MonoBehaviour
                 _gridBox.Remove(tempBox.gameObject);
                 Destroy(tempBox.gameObject);
             }
+            else
+            {
+                GameObject newD = Instantiate(features.Dteam[tempColorNumber - 1], newAVector2, quaternion.identity);
+                _gridBox.Add(newD);
+                _gridBox.Remove(tempBox.gameObject);
+                Destroy(tempBox.gameObject);
+            }
         }
     }
 
@@ -221,15 +232,27 @@ public class GridManager : MonoBehaviour
                 if (flag2 && gridPosY > 0)
                 {
                     flag = true;
-                    grid.transform.position = new Vector3(grid.transform.position.x,grid.transform.position.y - 1, grid.transform.position.z);
+                    Vector2 targetV2 = new Vector2(grid.transform.position.x, grid.transform.position.y - 1);
+                    StartCoroutine(FallBoxIE(grid, targetV2, 100));
                     break;
                 }
                 else
-                {
                     flag = false;
-                }
             }
         }
     }
-    
+
+    IEnumerator FallBoxIE(GameObject gridGo, Vector2 gridTargetV2, int speed)
+    {
+        while (gridGo && Vector2.Distance(gridGo.transform.position, gridTargetV2) > 0.01f)
+        {
+            gridGo.transform.position = Vector2.Lerp(gridGo.transform.position,gridTargetV2,Time.deltaTime * speed);
+            yield return null;
+        }
+
+        if (gridGo)
+        {
+            gridGo.transform.position = gridTargetV2;
+        }
+    }
 }
