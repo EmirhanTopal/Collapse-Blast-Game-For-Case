@@ -16,8 +16,8 @@ public class GridManager : MonoBehaviour
     private HashSet<BoxManager> _colorBoxHash = new HashSet<BoxManager>();
     private HashSet<BoxManager> _visitedBoxHash = new HashSet<BoxManager>();
     
-    private static int _rows = 12;
-    private static int _columns = 12;
+    private static int _rows = 4;
+    private static int _columns = 4;
     
     [SerializeField] private int changeA;
     [SerializeField] private int changeB;
@@ -76,7 +76,7 @@ public class GridManager : MonoBehaviour
     {
         DestroyGroup(boxManager,row,column,colorNumber);
         _colorBoxHash.Clear();
-        // aşşağı kayma
+        FallBox();
         // box eklenme
         IntBoxGroupHelp(); // grup güncellemesi
     }
@@ -197,4 +197,39 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+
+    private void FallBox()
+    {
+        bool flag = true;
+        while (flag)
+        {
+            foreach (var grid in _gridBox)
+            {
+                int gridPosX = Convert.ToInt32(grid.transform.position.x);
+                int gridPosY = Convert.ToInt32(grid.transform.position.y);
+                bool flag2 = true;
+                foreach (var grid2 in _gridBox)
+                {
+                    int grid2PosX = Convert.ToInt32(grid2.transform.position.x);
+                    int grid2PosY = Convert.ToInt32(grid2.transform.position.y);
+                    if (gridPosY - 1 == grid2PosY && gridPosX == grid2PosX)
+                    {
+                        flag2 = false;
+                        break;
+                    }
+                }
+                if (flag2 && gridPosY > 0)
+                {
+                    flag = true;
+                    grid.transform.position = new Vector3(grid.transform.position.x,grid.transform.position.y - 1, grid.transform.position.z);
+                    break;
+                }
+                else
+                {
+                    flag = false;
+                }
+            }
+        }
+    }
+    
 }
