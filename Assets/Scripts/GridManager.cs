@@ -16,9 +16,13 @@ public class GridManager : MonoBehaviour
     private HashSet<BoxManager> _colorBoxHash = new HashSet<BoxManager>();
     private HashSet<BoxManager> _visitedBoxHash = new HashSet<BoxManager>();
     
-    
     private static int _gridRows = 4;
     private static int _gridColumns = 4;
+    
+    
+    private static int totalSize = _gridRows * _gridColumns;
+    GameObject[] _addBox = new GameObject[totalSize];
+    int[,] _addBoxPos = new int[totalSize, totalSize];
     
     [SerializeField] private int changeA;
     [SerializeField] private int changeB;
@@ -236,7 +240,7 @@ public class GridManager : MonoBehaviour
                 {
                     flag = true;
                     Vector2 targetV2 = new Vector2(grid.transform.position.x, grid.transform.position.y - 1);
-                    StartCoroutine(FallBoxReachTargetIE(grid, targetV2, 1));
+                    StartCoroutine(FallBoxReachTargetIE(grid, targetV2, 10));
                 }
                 else
                     flag = false;
@@ -261,8 +265,8 @@ public class GridManager : MonoBehaviour
     
     private void NewGridBoxMain()
     {
-        List<GameObject> addBox = new List<GameObject>();
-        addBox.Clear();
+        int totalSize = _gridRows * _gridColumns;
+        int index = 0;
         for (int row = 0; row < _gridRows; row++)
         {
             for (int column = 0; column < _gridColumns; column++)
@@ -279,15 +283,41 @@ public class GridManager : MonoBehaviour
                 }
                 if (!flag)
                 {
-                    Vector2 newV2 = new Vector2(column, row + 4);
+                    Vector2 newV2 = new Vector2(column, _gridRows + row + 2);
                     GameObject gridGo = Instantiate(gridBackground[Random.Range(0, gridBackground.Count)], newV2, quaternion.identity);
-                    addBox.Add(gridGo);
+                    //gamobjectlerin listesini al
+                    //o anki gameobjectin row ve column değerlerini al
+                    _addBox[index] = gridGo;
+                    _addBoxPos[index, 0] = row;
+                    _addBoxPos[index, 1] = column;
+                    index++;
                     _gridBox.Add(gridGo);
                 }
             }
         }
 
-        StartCoroutine(UpdateGridBoxPositions(addBox));
+        bool flagControl = true;
+        while (flagControl)
+        {
+            flagControl = false;
+            int indexWhile = 0;
+            while (indexWhile < _addBox.Length)
+            {
+                if (_addBox[indexWhile] != null)
+                {
+                    int boxPosX = Convert.ToInt32(_addBox[indexWhile].transform.position.x);
+                    int boxPosY = Convert.ToInt32(_addBox[indexWhile].transform.position.y);
+                    if (boxPosY > _addBoxPos[indexWhile, 0] && boxPosX == _addBoxPos[indexWhile, 1])
+                    {
+                        flagControl = true;
+                        Vector2 newVector2 = new Vector2(_addBox[indexWhile].transform.position.x, _addBox[indexWhile].transform.position.y - 1);
+                        _addBox[indexWhile].transform.position = newVector2;
+                    }
+                }
+                indexWhile++;
+            }
+            //buraya 1 saniye bekleme süresi eklenecek
+        }
     }
 
     private IEnumerator UpdateGridBoxPositions(List<GameObject> addBox)
