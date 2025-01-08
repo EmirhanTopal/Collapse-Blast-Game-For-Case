@@ -41,6 +41,11 @@ public class BoxFeatures : MonoBehaviour
      private GameObject[] bTeam = new GameObject[6];
      private GameObject[] cTeam = new GameObject[6];
      private GameObject[] dTeam = new GameObject[6];
+
+     [SerializeField] private GridManager _gridManager;
+     [SerializeField] private int speed;
+     
+     
      
      public GameObject[] Ateam
      {
@@ -66,6 +71,7 @@ public class BoxFeatures : MonoBehaviour
           cTeam = AddGroup(blueC, greenC, pinkC, purpleC, redC, yellowC, cTeam);
           dTeam = AddGroup(blueD, greenD, pinkD, purpleD, redD, yellowD, dTeam);
      }
+     
 
      private GameObject[] AddGroup(GameObject b,GameObject g, GameObject p, GameObject pr,GameObject r, GameObject y, GameObject[] team)
      {
