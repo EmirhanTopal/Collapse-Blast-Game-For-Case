@@ -18,7 +18,11 @@ public class GridManager : MonoBehaviour
     
     private static int _gridRows = 4;
     private static int _gridColumns = 4;
-    
+
+    public List<GameObject> TempGridBox
+    {
+        get { return _gridBox; }
+    }
     public int GridRows
     {
         get { return _gridRows; }
@@ -97,7 +101,7 @@ public class GridManager : MonoBehaviour
     {
         DestroyGroup(boxManager,row,column,colorNumber);
         _colorBoxHash.Clear();
-        FallBoxMain();
+        //FallBoxMain();
         NewGridBoxMain();
         IntBoxGroupHelp();
     }
