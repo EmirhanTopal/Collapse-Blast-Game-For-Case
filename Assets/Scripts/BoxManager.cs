@@ -56,7 +56,7 @@ public class BoxManager : MonoBehaviour
         //     int gridBoxY = Convert.ToInt32(gridBox.transform.position.y);
         //     if (_startV3.x < _gridManager.GridColumns && _startV3.y < _gridManager.GridRows && (_startV3.x >= 0 || _startV3.y >= 0))
         //     {
-        //         if (Mathf.Approximately(_startV3.x, gridBox.transform.position.x) && Convert.ToInt32(_startV3.y - 1) == gridBoxY)
+        //         if (Convert.ToInt32(_startV3.y - 1) == gridBoxY)
         //         {
         //             flag = true;
         //         }
@@ -70,12 +70,13 @@ public class BoxManager : MonoBehaviour
         //         transform.position = _smallTargetV3;
         //     }
         // }
+        
         if (_startV3.x < _gridManager.GridColumns && _startV3.y > _gridManager.GridRows && (_startV3.x >= 0 || _startV3.y >= 0))
         {
             if (!_isTarget)
             {
                 transform.position = Vector3.MoveTowards(transform.position, _targetV3, 10 * Time.deltaTime);
-                if (Mathf.Approximately(_targetV3.y, transform.position.y) && Mathf.Approximately(_targetV3.x, transform.position.x))
+                if (_targetV3.y == transform.position.y && _targetV3.x == transform.position.x)
                 {
                     _isTarget = true;
                 }

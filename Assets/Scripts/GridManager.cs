@@ -63,7 +63,8 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
-        //MoveObjects();// optimizasyon için bakılacak.
+        //MoveObjects();
+        IntBoxGroupHelp();// optimizasyon için bakılacak.
     }
 
     private void InitialGrid()
@@ -101,7 +102,7 @@ public class GridManager : MonoBehaviour
     {
         DestroyGroup(boxManager,row,column,colorNumber);
         _colorBoxHash.Clear();
-        //FallBoxMain();
+        //StartCoroutine(FallBoxMain());
         NewGridBoxMain();
         IntBoxGroupHelp();
     }
@@ -197,54 +198,41 @@ public class GridManager : MonoBehaviour
         
         foreach (var tempBox in tempHash)
         {
-            Vector2 newAVector2 = new Vector2(tempBox.transform.position.x, tempBox.transform.position.y);
             int tempColorNumber = tempBox.ColorNumber;
             if (hashCount >= ChangeA && hashCount < ChangeB)
             {
-                GameObject newA = Instantiate(features.Ateam[tempColorNumber - 1], newAVector2, quaternion.identity);
-                _gridBox.Remove(tempBox.gameObject);
-                _gridBox.Add(newA);
-                Destroy(tempBox.gameObject);
+                tempBox.gameObject.GetComponent<SpriteRenderer>().sprite = features.Ateam[tempColorNumber - 1];
             }
             else if (hashCount >= ChangeB && hashCount < ChangeC)
             {
-                GameObject newB = Instantiate(features.Bteam[tempColorNumber - 1], newAVector2, quaternion.identity);
-                _gridBox.Remove(tempBox.gameObject);
-                _gridBox.Add(newB);
-                Destroy(tempBox.gameObject);
+                tempBox.gameObject.GetComponent<SpriteRenderer>().sprite = features.Bteam[tempColorNumber - 1];
             }
             else if (hashCount >= ChangeC)
             {
-                GameObject newC = Instantiate(features.Cteam[tempColorNumber - 1], newAVector2, quaternion.identity);
-                _gridBox.Remove(tempBox.gameObject);
-                _gridBox.Add(newC);
-                Destroy(tempBox.gameObject);
+                tempBox.gameObject.GetComponent<SpriteRenderer>().sprite = features.Cteam[tempColorNumber - 1];
             }
             else
             {
-                GameObject newD = Instantiate(features.Dteam[tempColorNumber - 1], newAVector2, quaternion.identity);
-                _gridBox.Remove(tempBox.gameObject);
-                _gridBox.Add(newD);
-                Destroy(tempBox.gameObject);
+                tempBox.gameObject.GetComponent<SpriteRenderer>().sprite = features.Dteam[tempColorNumber - 1];
             }
         }
     }
     
-    private void FallBoxMain()
+    private IEnumerator FallBoxMain()
     {
         bool flag = true;
         while (flag)
         {
-            foreach (var grid in _gridBox)
+            flag = false; // Döngüyü sonlandırmayı dene
+            List<GameObject> gridTemp = new List<GameObject>(_gridBox);
+            foreach (var grid in gridTemp)
             {
                 int gridPosX = Convert.ToInt32(grid.transform.position.x);
-                int gridPosY = Convert.ToInt32(grid.transform.position.y);
+                int gridPosY = Convert.ToInt32(grid.transform.position.y - 1);
                 bool flag2 = true;
                 foreach (var grid2 in _gridBox)
                 {
-                    int grid2PosX = Convert.ToInt32(grid2.transform.position.x);
-                    int grid2PosY = Convert.ToInt32(grid2.transform.position.y);
-                    if (gridPosY - 1 == grid2PosY && gridPosX == grid2PosX)
+                    if (Mathf.Approximately(grid.transform.position.y - 1, grid2.transform.position.y) && Mathf.Approximately(grid.transform.position.x, grid2.transform.position.x))
                     {
                         flag2 = false;
                     }
@@ -252,27 +240,25 @@ public class GridManager : MonoBehaviour
                 if (flag2 && gridPosY > 0)
                 {
                     flag = true;
-                    Vector2 targetV2 = new Vector2(grid.transform.position.x, grid.transform.position.y - 1);
-                    grid.transform.position = targetV2;
+                    Vector3 targetV3 = new Vector3(grid.transform.position.x, grid.transform.position.y - 1, grid.transform.position.z);
+                    yield return StartCoroutine(FallBoxIE(grid, targetV3, 1));
                 }
-                else
-                    flag = false;
             }
         }
     }
 
-    IEnumerator FallBoxReachTargetIE(GameObject gridGo, Vector2 gridTargetV2, int speed)
+
+    IEnumerator FallBoxIE(GameObject gridGo, Vector3 gridTargetV3, int speed)
     {
-        
-        while (gridGo && Vector2.Distance(gridGo.transform.position, gridTargetV2) > 0.01f)
+        while (gridGo && gridGo.transform.position != gridTargetV3)
         {
-            gridGo.transform.position = Vector2.Lerp(gridGo.transform.position,gridTargetV2, speed);
+            gridGo.transform.position = Vector2.Lerp(gridGo.transform.position,gridTargetV3,speed);
             yield return null;
         }
 
         if (gridGo)
         {
-            gridGo.transform.position = gridTargetV2;
+            gridGo.transform.position = gridTargetV3;
         }
     }
     

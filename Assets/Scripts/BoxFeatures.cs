@@ -7,60 +7,60 @@ using UnityEngine.Serialization;
 
 public class BoxFeatures : MonoBehaviour
 {
-     [SerializeField] private GameObject blueA;
-     [SerializeField] private GameObject blueB;
-     [SerializeField] private GameObject blueC;
-     [SerializeField] private GameObject blueD;
+     [SerializeField] private Sprite blueA;
+     [SerializeField] private Sprite blueB;
+     [SerializeField] private Sprite blueC;
+     [SerializeField] private Sprite blueD;
+                              
+     [SerializeField] private Sprite greenA;
+     [SerializeField] private Sprite greenB;
+     [SerializeField] private Sprite greenC;
+     [SerializeField] private Sprite greenD;
+                              
+     [SerializeField] private Sprite pinkA;
+     [SerializeField] private Sprite pinkB;
+     [SerializeField] private Sprite pinkC;
+     [SerializeField] private Sprite pinkD;
+                              
+     [SerializeField] private Sprite purpleA;
+     [SerializeField] private Sprite purpleB;
+     [SerializeField] private Sprite purpleC;
+     [SerializeField] private Sprite purpleD;
+                              
+     [SerializeField] private Sprite redA;
+     [SerializeField] private Sprite redB;
+     [SerializeField] private Sprite redC;
+     [SerializeField] private Sprite redD;
+                              
+     [SerializeField] private Sprite yellowA;
+     [SerializeField] private Sprite yellowB;
+     [SerializeField] private Sprite yellowC;
+     [SerializeField] private Sprite yellowD;
      
-     [SerializeField] private GameObject greenA;
-     [SerializeField] private GameObject greenB;
-     [SerializeField] private GameObject greenC;
-     [SerializeField] private GameObject greenD;
-     
-     [SerializeField] private GameObject pinkA;
-     [SerializeField] private GameObject pinkB;
-     [SerializeField] private GameObject pinkC;
-     [SerializeField] private GameObject pinkD;
-    
-     [SerializeField] private GameObject purpleA;
-     [SerializeField] private GameObject purpleB;
-     [SerializeField] private GameObject purpleC;
-     [SerializeField] private GameObject purpleD;
-      
-     [SerializeField] private GameObject redA;
-     [SerializeField] private GameObject redB;
-     [SerializeField] private GameObject redC;
-     [SerializeField] private GameObject redD;
-     
-     [SerializeField] private GameObject yellowA;
-     [SerializeField] private GameObject yellowB;
-     [SerializeField] private GameObject yellowC;
-     [SerializeField] private GameObject yellowD;
-     
-     private GameObject[] aTeam = new GameObject[6];
-     private GameObject[] bTeam = new GameObject[6];
-     private GameObject[] cTeam = new GameObject[6];
-     private GameObject[] dTeam = new GameObject[6];
+     private Sprite[] aTeam = new Sprite[6];
+     private Sprite[] bTeam = new Sprite[6];
+     private Sprite[] cTeam = new Sprite[6];
+     private Sprite[] dTeam = new Sprite[6];
 
      [SerializeField] private GridManager _gridManager;
      [SerializeField] private int speed;
      
      
      
-     public GameObject[] Ateam
+     public Sprite[] Ateam
      {
           get { return aTeam; }
      }
      
-     public GameObject[] Bteam
+     public Sprite[] Bteam
      {
           get { return bTeam; }
      }
-     public GameObject[] Cteam
+     public Sprite[] Cteam
      {
           get { return cTeam; }
      }
-     public GameObject[] Dteam
+     public Sprite[] Dteam
      {
           get { return dTeam; }
      }
@@ -73,7 +73,7 @@ public class BoxFeatures : MonoBehaviour
      }
      
 
-     private GameObject[] AddGroup(GameObject b,GameObject g, GameObject p, GameObject pr,GameObject r, GameObject y, GameObject[] team)
+     private Sprite[] AddGroup(Sprite b,Sprite g, Sprite p, Sprite pr,Sprite r, Sprite y, Sprite[] team)
      {
           team[0] = b;
           team[1] = g;
