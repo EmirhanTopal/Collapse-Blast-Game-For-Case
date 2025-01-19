@@ -16,8 +16,8 @@ public class GridManager : MonoBehaviour
     private List<BoxManager> _colorBoxHash = new List<BoxManager>();
     private HashSet<BoxManager> _visitedBoxHash = new HashSet<BoxManager>();
     
-    private static int _gridRows = 4;
-    private static int _gridColumns = 4;
+    private static int _gridRows = 10;
+    private static int _gridColumns = 10;
 
     public List<GameObject> TempGridBox
     {

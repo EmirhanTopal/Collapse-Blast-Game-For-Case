@@ -29,6 +29,7 @@ public class BoxManager : MonoBehaviour
     }
     private GridManager _gridManager;
     private List<GameObject> myGridBox = new List<GameObject>();
+    private Vector3 mytargetV3;
 
     private void Awake()
     {
@@ -37,9 +38,7 @@ public class BoxManager : MonoBehaviour
         if(transform.position.y > _gridManager.GridRows - 1 && transform.position.x < _gridManager.GridColumns)
             _targetV3 = new Vector3(transform.position.x, transform.position.y - _gridManager.GridRows - 2, transform.position.z);
         _startV3 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-
-        _smallTargetV3 = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
-        Debug.Log("target: " + _targetV3);
+        
         UpdatePosition();
     }
 
@@ -47,6 +46,8 @@ public class BoxManager : MonoBehaviour
     private void Update()
     {
         UpdatePosition();
+        
+        
     }
     private void FixedUpdate()
     {
@@ -71,21 +72,45 @@ public class BoxManager : MonoBehaviour
         //     }
         // }
         
-        if (_startV3.x < _gridManager.GridColumns && _startV3.y > _gridManager.GridRows && (_startV3.x >= 0 || _startV3.y >= 0))
+        mytargetV3 = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
+        if (_startV3.y > 0 && mytargetV3.y >= 0)
         {
-            if (!_isTarget)
+            Debug.Log(mytargetV3);
+            bool fallControl = true;
+            foreach (var grid in myGridBox)
             {
-                transform.position = Vector3.MoveTowards(transform.position, _targetV3, 10 * Time.deltaTime);
-                if (_targetV3.y == transform.position.y && _targetV3.x == transform.position.x)
+                int gridX = Convert.ToInt32(grid.transform.position.x);
+                int gridY = Convert.ToInt32(grid.transform.position.y);
+                if (Convert.ToInt32(transform.position.x) == gridX && Convert.ToInt32(transform.position.y - 1) == gridY)
                 {
-                    _isTarget = true;
+                    fallControl = false;
                 }
             }
-            else
+            if (fallControl)
             {
-                transform.position = _targetV3;
+                transform.position = Vector3.MoveTowards(transform.position, mytargetV3, 50 * Time.deltaTime);
+                if (Mathf.Approximately(transform.position.x, mytargetV3.x) && Mathf.Approximately(transform.position.y, mytargetV3.y))
+                {
+                    transform.position = mytargetV3;
+                }
             }
+            
         }
+        // if (_startV3.x < _gridManager.GridColumns && _startV3.y > _gridManager.GridRows && (_startV3.x >= 0 || _startV3.y >= 0))
+        // {
+        //     if (!_isTarget)
+        //     {
+        //         transform.position = Vector3.MoveTowards(transform.position, _targetV3, 10 * Time.deltaTime);
+        //         if (_targetV3.y == transform.position.y && _targetV3.x == transform.position.x)
+        //         {
+        //             _isTarget = true;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         transform.position = _targetV3;
+        //     }
+        // }
     }
 
     private void UpdatePosition()
