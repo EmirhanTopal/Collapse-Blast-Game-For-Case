@@ -32,16 +32,13 @@ public class GridManager : MonoBehaviour
         get { return _gridColumns; }
     }
     
-    private static int totalSize = _gridRows * _gridColumns;
-    private List<GameObject> myBox = new List<GameObject>();
-    GameObject[] _addBox = new GameObject[totalSize];
-    int[,] _addBoxPos = new int[totalSize, totalSize];
+    private static int _totalSize = _gridRows * _gridColumns;
+    private List<GameObject> _myBox = new List<GameObject>();
     
     [SerializeField] private int changeA;
     [SerializeField] private int changeB;
     [SerializeField] private int changeC;
 
-    private int _changingSpeed = 100;
     public int ChangeA
     {
         get { return changeA; }
@@ -63,8 +60,7 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
-        //MoveObjects();
-        IntBoxGroupHelp();// optimizasyon için bakılacak.
+        IntBoxGroupHelp();
     }
 
     private void InitialGrid()
@@ -95,14 +91,13 @@ public class GridManager : MonoBehaviour
                 Destroy(cbh.gameObject);
             }
         }
-        return myBox;
+        return _myBox;
     }
     
     public void ClickListenerHelp(BoxManager boxManager, int row, int column, int colorNumber)
     {
         DestroyGroup(boxManager,row,column,colorNumber);
         _colorBoxHash.Clear();
-        //StartCoroutine(FallBoxMain());
         NewGridBoxMain();
         IntBoxGroupHelp();
     }
@@ -218,54 +213,9 @@ public class GridManager : MonoBehaviour
         }
     }
     
-    private IEnumerator FallBoxMain()
-    {
-        bool flag = true;
-        while (flag)
-        {
-            flag = false; // Döngüyü sonlandırmayı dene
-            List<GameObject> gridTemp = new List<GameObject>(_gridBox);
-            foreach (var grid in gridTemp)
-            {
-                int gridPosX = Convert.ToInt32(grid.transform.position.x);
-                int gridPosY = Convert.ToInt32(grid.transform.position.y - 1);
-                bool flag2 = true;
-                foreach (var grid2 in _gridBox)
-                {
-                    if (Mathf.Approximately(grid.transform.position.y - 1, grid2.transform.position.y) && Mathf.Approximately(grid.transform.position.x, grid2.transform.position.x))
-                    {
-                        flag2 = false;
-                    }
-                }
-                if (flag2 && gridPosY > 0)
-                {
-                    flag = true;
-                    Vector3 targetV3 = new Vector3(grid.transform.position.x, grid.transform.position.y - 1, grid.transform.position.z);
-                    yield return StartCoroutine(FallBoxIE(grid, targetV3, 1));
-                }
-            }
-        }
-    }
-
-
-    IEnumerator FallBoxIE(GameObject gridGo, Vector3 gridTargetV3, int speed)
-    {
-        while (gridGo && gridGo.transform.position != gridTargetV3)
-        {
-            gridGo.transform.position = Vector2.Lerp(gridGo.transform.position,gridTargetV3,speed);
-            yield return null;
-        }
-
-        if (gridGo)
-        {
-            gridGo.transform.position = gridTargetV3;
-        }
-    }
-    
     private void NewGridBoxMain()
     {
-        myBox.Clear();
-        int index = 0;
+        _myBox.Clear();
         for (int row = 0; row < _gridRows; row++)
         {
             for (int column = 0; column < _gridColumns; column++)
@@ -285,37 +235,9 @@ public class GridManager : MonoBehaviour
                 {
                     Vector2 newV2 = new Vector2(column, _gridRows + row + 2);
                     GameObject gridGo = Instantiate(gridBackground[Random.Range(0, gridBackground.Count)], newV2, quaternion.identity);
-                    // _addBox[index] = gridGo;
-                    // _addBoxPos[index, 0] = row;
-                    // _addBoxPos[index, 1] = column;
                     _gridBox.Add(gridGo);
-                    index++;
                 }
             }
         }
-
-        // bool flagControl = true;
-        // while (flagControl)
-        // {
-        //     flagControl = false;
-        //     int indexWhile = 0;
-        //     while (indexWhile < _addBox.Length)
-        //     {
-        //         if (_addBox[indexWhile] != null)
-        //         {
-        //             int boxPosX = Convert.ToInt32(_addBox[indexWhile].transform.position.x);
-        //             int boxPosY = Convert.ToInt32(_addBox[indexWhile].transform.position.y);
-        //             if (boxPosY > _addBoxPos[indexWhile, 0] && boxPosX == _addBoxPos[indexWhile, 1])
-        //             {
-        //                 flagControl = true;
-        //                 Vector2 newVector2 = new Vector2(_addBox[indexWhile].transform.position.x, _addBox[indexWhile].transform.position.y - 1);
-        //                 _addBox[indexWhile].transform.position = newVector2;
-        //             }
-        //         }
-        //         indexWhile++;
-        //     }
-        //     //buraya 1 saniye bekleme süresi eklenecek
-        //     //obje bazlı deneme yapılacak - lets think
-        // }
     }
 }

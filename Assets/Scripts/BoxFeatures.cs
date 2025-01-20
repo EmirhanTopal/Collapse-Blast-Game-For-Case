@@ -37,39 +37,39 @@ public class BoxFeatures : MonoBehaviour
      [SerializeField] private Sprite yellowC;
      [SerializeField] private Sprite yellowD;
      
-     private Sprite[] aTeam = new Sprite[6];
-     private Sprite[] bTeam = new Sprite[6];
-     private Sprite[] cTeam = new Sprite[6];
-     private Sprite[] dTeam = new Sprite[6];
+     private Sprite[] _aTeam = new Sprite[6];
+     private Sprite[] _bTeam = new Sprite[6];
+     private Sprite[] _cTeam = new Sprite[6];
+     private Sprite[] _dTeam = new Sprite[6];
 
-     [SerializeField] private GridManager _gridManager;
+     [SerializeField] private GridManager gridManager;
      [SerializeField] private int speed;
      
      
      
      public Sprite[] Ateam
      {
-          get { return aTeam; }
+          get { return _aTeam; }
      }
      
      public Sprite[] Bteam
      {
-          get { return bTeam; }
+          get { return _bTeam; }
      }
      public Sprite[] Cteam
      {
-          get { return cTeam; }
+          get { return _cTeam; }
      }
      public Sprite[] Dteam
      {
-          get { return dTeam; }
+          get { return _dTeam; }
      }
      private void Start()
      {
-          aTeam = AddGroup(blueA, greenA, pinkA, purpleA, redA, yellowA, aTeam);
-          bTeam = AddGroup(blueB, greenB, pinkB, purpleB, redB, yellowB, bTeam);
-          cTeam = AddGroup(blueC, greenC, pinkC, purpleC, redC, yellowC, cTeam);
-          dTeam = AddGroup(blueD, greenD, pinkD, purpleD, redD, yellowD, dTeam);
+          _aTeam = AddGroup(blueA, greenA, pinkA, purpleA, redA, yellowA, _aTeam);
+          _bTeam = AddGroup(blueB, greenB, pinkB, purpleB, redB, yellowB, _bTeam);
+          _cTeam = AddGroup(blueC, greenC, pinkC, purpleC, redC, yellowC, _cTeam);
+          _dTeam = AddGroup(blueD, greenD, pinkD, purpleD, redD, yellowD, _dTeam);
      }
      
 
