@@ -4,17 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-[ExecuteAlways]
 public class BoxManager : MonoBehaviour
 {
     [SerializeField] private int colorNumber;
     
     private int _row;
     private int _column;
-    private bool _isTarget = false;
-    private Vector3 _targetV3;
     private Vector3 _startV3;
-    private Vector3 _smallTargetV3;
+    private Vector3 _mytargetV3;
+    private GridManager _gridManager;
+    private List<GameObject> _myGridBox = new List<GameObject>();
     public int Row
     {
         get { return _row; }
@@ -27,9 +26,6 @@ public class BoxManager : MonoBehaviour
     {
         get { return colorNumber; }
     }
-    private GridManager _gridManager;
-    private List<GameObject> _myGridBox = new List<GameObject>();
-    private Vector3 _mytargetV3;
 
     private void Awake()
     {
@@ -43,6 +39,7 @@ public class BoxManager : MonoBehaviour
     private void Update()
     {
         UpdatePosition();
+        
     }
     private void FixedUpdate()
     {
@@ -61,13 +58,12 @@ public class BoxManager : MonoBehaviour
             }
             if (fallControl)
             {
-                transform.position = Vector3.MoveTowards(transform.position, _mytargetV3, 50 * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, _mytargetV3, 75 * Time.deltaTime);
                 if (Mathf.Approximately(transform.position.x, _mytargetV3.x) && Mathf.Approximately(transform.position.y, _mytargetV3.y))
                 {
                     transform.position = _mytargetV3;
                 }
             }
-            
         }
     }
 

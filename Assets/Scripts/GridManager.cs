@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -15,10 +17,16 @@ public class GridManager : MonoBehaviour
     private List<GameObject> _gridBox = new List<GameObject>();
     private List<BoxManager> _colorBoxHash = new List<BoxManager>();
     private HashSet<BoxManager> _visitedBoxHash = new HashSet<BoxManager>();
+    private HashSet<BoxManager> _tempHash = new HashSet<BoxManager>();
+    private List<int> _groupCounts = new List<int>();
+    private static int _gridRows = 5;
+    private static int _gridColumns = 5;
+    private int test = 0;
     
-    private static int _gridRows = 10;
-    private static int _gridColumns = 10;
-
+    bool _checkGroups = true;
+    [SerializeField] private int changeA;
+    [SerializeField] private int changeB;
+    [SerializeField] private int changeC;
     public List<GameObject> TempGridBox
     {
         get { return _gridBox; }
@@ -31,13 +39,6 @@ public class GridManager : MonoBehaviour
     {
         get { return _gridColumns; }
     }
-    
-    private static int _totalSize = _gridRows * _gridColumns;
-    private List<GameObject> _myBox = new List<GameObject>();
-    
-    [SerializeField] private int changeA;
-    [SerializeField] private int changeB;
-    [SerializeField] private int changeC;
 
     public int ChangeA
     {
@@ -55,14 +56,38 @@ public class GridManager : MonoBehaviour
     private void Start()
     {
         InitialGrid();
-        IntBoxGroupHelp();
+        test = IntBoxGroupHelp();
+        CheckGameOver(test);
     }
 
     private void Update()
     {
-        IntBoxGroupHelp();
+        
     }
-
+    
+    public void ClickListenerHelp(BoxManager boxManager, int row, int column, int colorNumber)
+    {
+        DestroyGroup(boxManager,row,column,colorNumber);
+        _colorBoxHash.Clear();
+        NewGridBoxMain();
+        StartCoroutine(WaitAndUpdate());
+    }
+    
+    private IEnumerator WaitAndUpdate()
+    {
+        yield return new WaitForSeconds(1f);
+        test = IntBoxGroupHelp();
+        CheckGameOver(test);
+    }
+    private void CheckGameOver(int testParam)
+    {
+        Debug.Log(testParam);
+        if (testParam <= 0)
+        {
+            Debug.Log("bitti");
+        }
+        _groupCounts.Clear();
+    }
     private void InitialGrid()
     {
         int gridRow = 0;
@@ -80,7 +105,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private List<GameObject> DestroyGroup(BoxManager boxManager, int row, int column, int colorNumber)
+    private void DestroyGroup(BoxManager boxManager, int row, int column, int colorNumber)
     {
         _colorBoxHash = ClickListenerBoxManager(boxManager, row, column, colorNumber, _colorBoxHash);
         foreach (var cbh in _colorBoxHash)
@@ -91,16 +116,8 @@ public class GridManager : MonoBehaviour
                 Destroy(cbh.gameObject);
             }
         }
-        return _myBox;
     }
     
-    public void ClickListenerHelp(BoxManager boxManager, int row, int column, int colorNumber)
-    {
-        DestroyGroup(boxManager,row,column,colorNumber);
-        _colorBoxHash.Clear();
-        NewGridBoxMain();
-        IntBoxGroupHelp();
-    }
     
     private List<BoxManager> ClickListenerBoxManager(BoxManager boxManager, int row, int column, int colorNumber, List<BoxManager> hashSet)
     {
@@ -135,20 +152,25 @@ public class GridManager : MonoBehaviour
         return hashSet;
     }
 
-    private void IntBoxGroupHelp()
+    private int IntBoxGroupHelp()
     {
         _visitedBoxHash.Clear();
-        
-        HashSet<BoxManager> tempHash = new HashSet<BoxManager>();
+        _tempHash.Clear();
+        _groupCounts.Clear();
         List<GameObject> copyGridBox = new List<GameObject>(_gridBox);
-        foreach (var copyGridHelp in copyGridBox)
+        foreach (GameObject copyGridHelp in copyGridBox)
         {
             var officialGridHelp = copyGridHelp.GetComponent<BoxManager>();
-            tempHash = IntBoxGroup(officialGridHelp, officialGridHelp.Row, officialGridHelp.Column, officialGridHelp.ColorNumber, tempHash, _visitedBoxHash);
-            ChangeShape(tempHash);
-            tempHash.Clear();
+            _tempHash = IntBoxGroup(officialGridHelp, officialGridHelp.Row, officialGridHelp.Column, officialGridHelp.ColorNumber, _tempHash, _visitedBoxHash);
+            if (_tempHash.Count > 1)
+            {
+                _groupCounts.Add(_tempHash.Count);
+            }
+            ChangeShape(_tempHash);
+            _tempHash.Clear();
         }
-        
+        _tempHash.Clear();
+        return _groupCounts.Count;
     }
     private HashSet<BoxManager> IntBoxGroup(BoxManager boxManager, int row, int column, int colorNumber, HashSet<BoxManager> hashSet2, HashSet<BoxManager> visitedHash)
     {
@@ -193,29 +215,29 @@ public class GridManager : MonoBehaviour
         
         foreach (var tempBox in tempHash)
         {
+            var sprite = tempBox.gameObject.GetComponent<SpriteRenderer>();
             int tempColorNumber = tempBox.ColorNumber;
             if (hashCount >= ChangeA && hashCount < ChangeB)
             {
-                tempBox.gameObject.GetComponent<SpriteRenderer>().sprite = features.Ateam[tempColorNumber - 1];
+                sprite.sprite = features.Ateam[tempColorNumber - 1];
             }
             else if (hashCount >= ChangeB && hashCount < ChangeC)
             {
-                tempBox.gameObject.GetComponent<SpriteRenderer>().sprite = features.Bteam[tempColorNumber - 1];
+                sprite.sprite = features.Bteam[tempColorNumber - 1];
             }
             else if (hashCount >= ChangeC)
             {
-                tempBox.gameObject.GetComponent<SpriteRenderer>().sprite = features.Cteam[tempColorNumber - 1];
+                sprite.sprite = features.Cteam[tempColorNumber - 1];
             }
             else
             {
-                tempBox.gameObject.GetComponent<SpriteRenderer>().sprite = features.Dteam[tempColorNumber - 1];
+                sprite.sprite = features.Dteam[tempColorNumber - 1];
             }
         }
     }
     
     private void NewGridBoxMain()
     {
-        _myBox.Clear();
         for (int row = 0; row < _gridRows; row++)
         {
             for (int column = 0; column < _gridColumns; column++)
@@ -229,6 +251,7 @@ public class GridManager : MonoBehaviour
                     if (gridPosX == column && gridPosY == row) 
                     { 
                         flag = true;
+                        break;
                     }
                 }
                 if (!flag)
