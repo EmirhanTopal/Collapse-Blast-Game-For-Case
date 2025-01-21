@@ -14,7 +14,8 @@ public class UIScript : MonoBehaviour
     [SerializeField] private TMP_InputField a;
     [SerializeField] private TMP_InputField b;
     [SerializeField] private TMP_InputField c;
-    
+    [SerializeField] private GameObject panel;
+    [SerializeField] private TextMeshProUGUI _textMeshProUGUI;
     public static int StringRow;
     public static int StringColumn;
     public static int StringColor;
@@ -25,18 +26,15 @@ public class UIScript : MonoBehaviour
     private int _totalBox;
     public void InputGrid()
     {
-        bool boolRow = false;
-        bool boolColumn = false;
-        bool boolColor = false;
-        bool boolAbc = false;
+        
         try
         {
             StringRow = Convert.ToInt32(row.text);
         }
         catch (FormatException)
         {
-            Debug.Log("please enter a integer format and enter a number between 2 and 10");
-            //error canvas open and write it down (please change Row and enter a number between 2 and 10)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "please enter a integer format and enter a number between 2 and 10";
         }
         catch (OverflowException)
         {
@@ -157,14 +155,6 @@ public class UIScript : MonoBehaviour
             Debug.Log("please change B and enter a number under C");
         }
         else
-        {
-            boolAbc = true;
-            boolRow = true;
-            boolColumn = true;
-            boolColor = true;
-        }
-        
-        if (boolRow && boolColumn && boolColor && boolAbc)
         {
             SceneManager.LoadScene("MainScene");
         }
