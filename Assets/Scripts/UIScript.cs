@@ -23,9 +23,15 @@ public class UIScript : MonoBehaviour
     public static int StringB;
     public static int StringC;
     
+    private int _totalBox;
+
+    public void PanelOnOff()
+    {
+        panel.SetActive(false);
+    }
     public void InputGrid()
     {
-        int totalBox;
+        bool hasError = false;
         try
         {
             StringRow = Convert.ToInt32(row.text);
@@ -33,13 +39,17 @@ public class UIScript : MonoBehaviour
         catch (FormatException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "please enter a integer format and enter a number between 2 and 10";
+            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 2 and 10";
+            hasError = true;
         }
         catch (OverflowException)
         {
-            Debug.Log("please enter a number between 2 and 10");
-            //error canvas open and write it down (please change Row and enter a number between 2 and 10)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 2 and 10";
+            hasError = true;
         }
+
+        if (hasError) return;
         
         try
         {
@@ -47,14 +57,17 @@ public class UIScript : MonoBehaviour
         }
         catch (FormatException)
         {
-            Debug.Log("please enter a integer format and enter a number between 1 and 10");
-            //error canvas open and write it down (please change Column and enter a number between 1 and 10)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 10";
+            hasError = true;
         }
         catch (OverflowException)
         {
-            Debug.Log("please enter a number between 1 and 10");
-            //error canvas open and write it down (please change Column and enter a number between 1 and 10)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 10";
+            hasError = true;
         }
+        if (hasError) return;
         
         try
         {
@@ -62,14 +75,17 @@ public class UIScript : MonoBehaviour
         }
         catch (FormatException)
         {
-            Debug.Log("please enter a integer format and enter a number between 1 and 6");
-            //error canvas open and write it down (please change Color and enter a number between 1 and 6)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 6";
+            hasError = true;
         }
         catch (OverflowException)
         {
-            Debug.Log("please enter a number between 1 and 6");
-            //error canvas open and write it down (please change Color and enter a number between 1 and 6)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 6";
+            hasError = true;
         }
+        if (hasError) return;
         
         try
         {
@@ -77,29 +93,34 @@ public class UIScript : MonoBehaviour
         }
         catch (FormatException)
         {
-            Debug.Log("please change A and enter a number under B and C");
-            //error canvas open and write it down (please change A and enter a number under B and C)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please change A and enter a number under B and C";
+            hasError = true;
         }
         catch (OverflowException)
         {
-            Debug.Log("please change A and enter a number under B and C");
-            //error canvas open and write it down (please change A and enter a number under B and C)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please change A and enter a number under B and C";
+            hasError = true;
         }
-        
+        if (hasError) return;
         try
         {
             StringB = Convert.ToInt32(b.text);
         }
         catch (FormatException)
         {
-            Debug.Log("please change B and enter a number under C");
-            //error canvas open and write it down (please change B and enter a number under C)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please change B and enter a number under C";
+            hasError = true;
         }
         catch (OverflowException)
         {
-            Debug.Log("please change B and enter a number under C");
-            //error canvas open and write it down (please change B and enter a number under C)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please change B and enter a number under C";
+            hasError = true;
         }
+        if (hasError) return;
         
         try
         {
@@ -107,51 +128,63 @@ public class UIScript : MonoBehaviour
         }
         catch (FormatException)
         {
-            Debug.Log("please change B and enter a number below A and B");
-            //error canvas open and write it down (please change B and enter a number below A and B)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please change B and enter a number below A and B";
+            hasError = true;
         }
         catch (OverflowException)
         {
-            Debug.Log("please change B and enter a number below A and B");
-            //error canvas open and write it down (please change B and enter a number below A and B)
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please change B and enter a number below A and B";
+            hasError = true;
         }
-
-        totalBox = StringRow * StringColumn;
+        if (hasError) return;
+        
+        _totalBox = StringRow * StringColumn;
         if (StringRow > 10 || StringRow < 2)
         {
-            Debug.Log("Please enter a Row number under 10 and below 2");
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please enter a Row number under 10 and below 2";
         }
         else if (StringColumn > 10 || StringColumn < 1)
         {
-            Debug.Log("Please enter a Column number under 10 and below 1");
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please enter a Column number under 10 and below 1";
         }
         else if (StringColor > 6 || StringColumn < 1)
         {
-            Debug.Log("Please enter a Color number under 6 and below 1");
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please enter a Color number under 6 and below 1";
         }
-        else if (StringA > totalBox || StringA < 2)
+        else if (StringA > _totalBox || StringA < 2)
         {
-            Debug.Log($"Please enter a 'A' number under {totalBox} and below 2");
+            panel.SetActive(true);
+            _textMeshProUGUI.text = $"Please enter a 'A' number under {_totalBox} and below 2";
         }
-        else if (StringB > totalBox || StringB < 3)
+        else if (StringB > _totalBox || StringB < 3)
         {
-            Debug.Log($"Please enter a 'B' number under {totalBox} and below 3");
+            panel.SetActive(true);
+            _textMeshProUGUI.text = $"Please enter a 'A' number under {_totalBox} and below 2";
         }
-        else if (StringC > totalBox || StringC < 4)
+        else if (StringC > _totalBox || StringC < 4)
         {
-            Debug.Log($"Please enter a 'C' number under {totalBox} and below 4");
+            panel.SetActive(true);
+            _textMeshProUGUI.text = $"Please enter a 'A' number under {_totalBox} and below 2";
         }
         else if (StringA >= StringB)
         {
-            Debug.Log("please change A and enter a number under B and C");
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please change A and enter a number under B and C";
         }
         else if (StringA >= StringC)
         {
-            Debug.Log("please change A and enter a number under B and C");
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please change A and enter a number under B and C";
         }
         else if (StringB >= StringC)
         {
-            Debug.Log("please change B and enter a number under C");
+            panel.SetActive(true);
+            _textMeshProUGUI.text = "Please change B and enter a number under C";
         }
         else
         {
