@@ -22,11 +22,10 @@ public class UIScript : MonoBehaviour
     public static int StringA;
     public static int StringB;
     public static int StringC;
-
-    private int _totalBox;
+    
     public void InputGrid()
     {
-        
+        int totalBox;
         try
         {
             StringRow = Convert.ToInt32(row.text);
@@ -117,7 +116,7 @@ public class UIScript : MonoBehaviour
             //error canvas open and write it down (please change B and enter a number below A and B)
         }
 
-        _totalBox = StringRow * StringColumn;
+        totalBox = StringRow * StringColumn;
         if (StringRow > 10 || StringRow < 2)
         {
             Debug.Log("Please enter a Row number under 10 and below 2");
@@ -130,17 +129,17 @@ public class UIScript : MonoBehaviour
         {
             Debug.Log("Please enter a Color number under 6 and below 1");
         }
-        else if (StringA > _totalBox || StringA <= 2)
+        else if (StringA > totalBox || StringA < 2)
         {
-            Debug.Log($"Please enter a 'A' number under {_totalBox} and below 2");
+            Debug.Log($"Please enter a 'A' number under {totalBox} and below 2");
         }
-        else if (StringB > _totalBox || StringB <= 3)
+        else if (StringB > totalBox || StringB < 3)
         {
-            Debug.Log($"Please enter a 'B' number under {_totalBox} and below 3");
+            Debug.Log($"Please enter a 'B' number under {totalBox} and below 3");
         }
-        else if (StringC > _totalBox || StringC <= 4)
+        else if (StringC > totalBox || StringC < 4)
         {
-            Debug.Log($"Please enter a 'C' number under {_totalBox} and below 4");
+            Debug.Log($"Please enter a 'C' number under {totalBox} and below 4");
         }
         else if (StringA >= StringB)
         {
