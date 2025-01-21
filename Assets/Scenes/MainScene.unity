@@ -204,7 +204,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.6016752, g: 0.55193126, b: 0.745283, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -463,7 +463,7 @@ MonoBehaviour:
   yellowB: {fileID: 21300000, guid: 2da677c24eed7254e9f1f0525fda3e04, type: 3}
   yellowC: {fileID: 21300000, guid: c3479e6f1d0255f46825df6b5d762637, type: 3}
   yellowD: {fileID: 21300000, guid: e4140ae2d6c18494e97755daf2d95c89, type: 3}
-  _gridManager: {fileID: 1617930155}
+  gridManager: {fileID: 0}
   speed: 10
 --- !u!4 &1360997664
 Transform:
@@ -517,9 +517,6 @@ MonoBehaviour:
   - {fileID: 5085038510923440363, guid: 48b415c96cdb9e44282a29c5d159d0f6, type: 3}
   - {fileID: 7774390934989985204, guid: f27b740152950664894196c95c5f187d, type: 3}
   features: {fileID: 1360997663}
-  changeA: 2
-  changeB: 4
-  changeC: 6
 --- !u!4 &1617930156
 Transform:
   m_ObjectHideFlags: 0
