@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class UIScript : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class UIScript : MonoBehaviour
     [SerializeField] private TMP_InputField b;
     [SerializeField] private TMP_InputField c;
     [SerializeField] private GameObject panel;
-    [SerializeField] private TextMeshProUGUI _textMeshProUGUI;
+    [SerializeField] private TextMeshProUGUI textMeshProUGUI;
     public static int StringRow;
     public static int StringColumn;
     public static int StringColor;
@@ -39,13 +40,13 @@ public class UIScript : MonoBehaviour
         catch (FormatException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 2 and 10";
+            textMeshProUGUI.text = "Please enter a integer format and enter a number between 2 and 10";
             hasError = true;
         }
         catch (OverflowException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 2 and 10";
+            textMeshProUGUI.text = "Please enter a integer format and enter a number between 2 and 10";
             hasError = true;
         }
 
@@ -58,13 +59,13 @@ public class UIScript : MonoBehaviour
         catch (FormatException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 10";
+            textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 10";
             hasError = true;
         }
         catch (OverflowException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 10";
+            textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 10";
             hasError = true;
         }
         if (hasError) return;
@@ -76,13 +77,13 @@ public class UIScript : MonoBehaviour
         catch (FormatException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 6";
+            textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 6";
             hasError = true;
         }
         catch (OverflowException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 6";
+            textMeshProUGUI.text = "Please enter a integer format and enter a number between 1 and 6";
             hasError = true;
         }
         if (hasError) return;
@@ -94,13 +95,13 @@ public class UIScript : MonoBehaviour
         catch (FormatException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please change A and enter a number under B and C";
+            textMeshProUGUI.text = "Please change A and enter a number under B and C";
             hasError = true;
         }
         catch (OverflowException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please change A and enter a number under B and C";
+            textMeshProUGUI.text = "Please change A and enter a number under B and C";
             hasError = true;
         }
         if (hasError) return;
@@ -111,13 +112,13 @@ public class UIScript : MonoBehaviour
         catch (FormatException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please change B and enter a number under C";
+            textMeshProUGUI.text = "Please change B and enter a number under C";
             hasError = true;
         }
         catch (OverflowException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please change B and enter a number under C";
+            textMeshProUGUI.text = "Please change B and enter a number under C";
             hasError = true;
         }
         if (hasError) return;
@@ -129,13 +130,13 @@ public class UIScript : MonoBehaviour
         catch (FormatException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please change B and enter a number below A and B";
+            textMeshProUGUI.text = "Please change B and enter a number below A and B";
             hasError = true;
         }
         catch (OverflowException)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please change B and enter a number below A and B";
+            textMeshProUGUI.text = "Please change B and enter a number below A and B";
             hasError = true;
         }
         if (hasError) return;
@@ -144,47 +145,47 @@ public class UIScript : MonoBehaviour
         if (StringRow > 10 || StringRow < 2)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please enter a Row number under 10 and below 2";
+            textMeshProUGUI.text = "Please enter a Row number under 10 and below 2";
         }
         else if (StringColumn > 10 || StringColumn < 1)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please enter a Column number under 10 and below 1";
+            textMeshProUGUI.text = "Please enter a Column number under 10 and below 1";
         }
         else if (StringColor > 6 || StringColumn < 1)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please enter a Color number under 6 and below 1";
+            textMeshProUGUI.text = "Please enter a Color number under 6 and below 1";
         }
         else if (StringA > _totalBox || StringA < 2)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = $"Please enter a 'A' number under {_totalBox} and below 2";
+            textMeshProUGUI.text = $"Please enter a 'A' number under {_totalBox} and below 2";
         }
         else if (StringB > _totalBox || StringB < 3)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = $"Please enter a 'A' number under {_totalBox} and below 2";
+            textMeshProUGUI.text = $"Please enter a 'A' number under {_totalBox} and below 2";
         }
         else if (StringC > _totalBox || StringC < 4)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = $"Please enter a 'A' number under {_totalBox} and below 2";
+            textMeshProUGUI.text = $"Please enter a 'A' number under {_totalBox} and below 2";
         }
         else if (StringA >= StringB)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please change A and enter a number under B and C";
+            textMeshProUGUI.text = "Please change A and enter a number under B and C";
         }
         else if (StringA >= StringC)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please change A and enter a number under B and C";
+            textMeshProUGUI.text = "Please change A and enter a number under B and C";
         }
         else if (StringB >= StringC)
         {
             panel.SetActive(true);
-            _textMeshProUGUI.text = "Please change B and enter a number under C";
+            textMeshProUGUI.text = "Please change B and enter a number under C";
         }
         else
         {

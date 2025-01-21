@@ -1905,7 +1905,7 @@ MonoBehaviour:
   b: {fileID: 1539217737}
   c: {fileID: 2022136529}
   panel: {fileID: 1376291974}
-  _textMeshProUGUI: {fileID: 1552606896}
+  textMeshProUGUI: {fileID: 1552606896}
 --- !u!4 &881486760
 Transform:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ public class GridManager : MonoBehaviour
 {
     [SerializeField] private List<GameObject> gridBackground = new List<GameObject>();
     [SerializeField] private BoxFeatures features;
+    [SerializeField] private GameObject panel;
     
     private List<int> _groupCounts = new List<int>();
     private List<GameObject> _gridBox = new List<GameObject>();
@@ -74,6 +75,12 @@ public class GridManager : MonoBehaviour
         NewGridBoxMain();
         StartCoroutine(WaitAndUpdate());
     }
+
+    public void QuitGame()
+    {
+        // çalışmıyor - UI scriptte 2 - 1 durumlarında çalışmıyor - optimizasyon
+        Application.Quit();
+    }
     
     private IEnumerator WaitAndUpdate()
     {
@@ -86,7 +93,7 @@ public class GridManager : MonoBehaviour
         Debug.Log(testParam);
         if (testParam <= 0)
         {
-            Debug.Log("bitti");
+            panel.SetActive(true);
         }
         _groupCounts.Clear();
     }
