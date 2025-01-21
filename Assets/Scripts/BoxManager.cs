@@ -58,7 +58,7 @@ public class BoxManager : MonoBehaviour
             }
             if (fallControl)
             {
-                transform.position = Vector3.MoveTowards(transform.position, _mytargetV3, 75 * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, _mytargetV3, 50 * Time.fixedDeltaTime);
                 if (Mathf.Approximately(transform.position.x, _mytargetV3.x) && Mathf.Approximately(transform.position.y, _mytargetV3.y))
                 {
                     transform.position = _mytargetV3;

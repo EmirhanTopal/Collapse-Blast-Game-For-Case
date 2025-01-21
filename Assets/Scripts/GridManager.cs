@@ -14,19 +14,20 @@ public class GridManager : MonoBehaviour
 {
     [SerializeField] private List<GameObject> gridBackground = new List<GameObject>();
     [SerializeField] private BoxFeatures features;
+    
+    private List<int> _groupCounts = new List<int>();
     private List<GameObject> _gridBox = new List<GameObject>();
     private List<BoxManager> _colorBoxHash = new List<BoxManager>();
     private HashSet<BoxManager> _visitedBoxHash = new HashSet<BoxManager>();
     private HashSet<BoxManager> _tempHash = new HashSet<BoxManager>();
-    private List<int> _groupCounts = new List<int>();
-    private static int _gridRows = 5;
-    private static int _gridColumns = 5;
-    private int test = 0;
     
-    bool _checkGroups = true;
-    [SerializeField] private int changeA;
-    [SerializeField] private int changeB;
-    [SerializeField] private int changeC;
+    private int _changeA;
+    private int _changeB;
+    private int _changeC;
+    private static int _gridRows;
+    private static int _gridColumns;
+    private static int _colorNumbers;
+    private int _test = 0;
     public List<GameObject> TempGridBox
     {
         get { return _gridBox; }
@@ -42,27 +43,28 @@ public class GridManager : MonoBehaviour
 
     public int ChangeA
     {
-        get { return changeA; }
+        get { return _changeA; }
     }
     public int ChangeB
     {
-        get { return changeB; }
+        get { return _changeB; }
     }
     public int ChangeC
     {
-        get { return changeC; }
+        get { return _changeC; }
     }
     
     private void Start()
     {
+        _gridRows = UIScript.StringRow;
+        _gridColumns = UIScript.StringColumn;
+        _colorNumbers = UIScript.StringColor;
+        _changeA = UIScript.StringA;
+        _changeB = UIScript.StringB;
+        _changeC = UIScript.StringC;
         InitialGrid();
-        test = IntBoxGroupHelp();
-        CheckGameOver(test);
-    }
-
-    private void Update()
-    {
-        
+        _test = IntBoxGroupHelp();
+        CheckGameOver(_test);
     }
     
     public void ClickListenerHelp(BoxManager boxManager, int row, int column, int colorNumber)
@@ -76,8 +78,8 @@ public class GridManager : MonoBehaviour
     private IEnumerator WaitAndUpdate()
     {
         yield return new WaitForSeconds(1f);
-        test = IntBoxGroupHelp();
-        CheckGameOver(test);
+        _test = IntBoxGroupHelp();
+        CheckGameOver(_test);
     }
     private void CheckGameOver(int testParam)
     {
@@ -96,8 +98,8 @@ public class GridManager : MonoBehaviour
             int gridColumn = 0;
             while (gridColumn < _gridColumns)
             {
-                Vector2 v2 = new Vector2(gridRow, gridColumn);
-                GameObject gridGo = Instantiate(gridBackground[Random.Range(0, gridBackground.Count)],v2, quaternion.identity);
+                Vector2 v2 = new Vector2(gridColumn, gridRow);
+                GameObject gridGo = Instantiate(gridBackground[Random.Range(0, _colorNumbers)],v2, quaternion.identity);
                 _gridBox.Add(gridGo);
                 gridColumn++;
             }
@@ -257,7 +259,7 @@ public class GridManager : MonoBehaviour
                 if (!flag)
                 {
                     Vector2 newV2 = new Vector2(column, _gridRows + row + 2);
-                    GameObject gridGo = Instantiate(gridBackground[Random.Range(0, gridBackground.Count)], newV2, quaternion.identity);
+                    GameObject gridGo = Instantiate(gridBackground[Random.Range(0, _colorNumbers)], newV2, quaternion.identity);
                     _gridBox.Add(gridGo);
                 }
             }
