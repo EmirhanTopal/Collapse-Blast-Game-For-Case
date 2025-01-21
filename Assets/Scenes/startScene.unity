@@ -1765,7 +1765,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   row: {fileID: 853694589}
-  column: {fileID: 0}
+  column: {fileID: 814931037}
+  color: {fileID: 1733791206}
+  a: {fileID: 839746667}
+  b: {fileID: 1539217737}
+  c: {fileID: 2022136529}
 --- !u!4 &881486760
 Transform:
   m_ObjectHideFlags: 0
