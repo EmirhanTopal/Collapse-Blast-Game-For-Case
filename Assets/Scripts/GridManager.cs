@@ -79,9 +79,29 @@ public class GridManager : MonoBehaviour
     public void QuitGame()
     {
         // çalışmıyor - UI scriptte 2 - 1 durumlarında çalışmıyor - optimizasyon
-        Application.Quit();
+        //Application.Quit();
     }
-    
+    public void ShuffleGrid()
+    {
+        List<GameObject> boxes = new List<GameObject>(_gridBox);
+        
+        for (int i = 0; i < boxes.Count; i++)
+        {
+            int randomIndex = Random.Range(0, boxes.Count);
+            (boxes[i], boxes[randomIndex]) = (boxes[randomIndex], boxes[i]);
+        }
+        
+        int index = 0;
+        for (int row = 0; row < _gridRows; row++)
+        {
+            for (int col = 0; col < _gridColumns; col++)
+            {
+                boxes[index].transform.position = new Vector3(col, row, 0);
+                index++;
+            }
+        }
+    }
+
     private IEnumerator WaitAndUpdate()
     {
         yield return new WaitForSeconds(1f);
@@ -93,7 +113,7 @@ public class GridManager : MonoBehaviour
         Debug.Log(testParam);
         if (testParam <= 0)
         {
-            panel.SetActive(true);
+            ShuffleGrid();
         }
         _groupCounts.Clear();
     }
