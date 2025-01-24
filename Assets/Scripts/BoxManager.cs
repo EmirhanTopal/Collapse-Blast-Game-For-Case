@@ -44,27 +44,27 @@ public class BoxManager : MonoBehaviour
     private void FixedUpdate()
     {
         _mytargetV3 = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
-        if (_startV3.y > 0 && _mytargetV3.y >= 0)
-        {
-            bool fallControl = true;
-            foreach (var grid in _myGridBox)
-            {
-                int gridX = Convert.ToInt32(grid.transform.position.x);
-                int gridY = Convert.ToInt32(grid.transform.position.y);
-                if (Convert.ToInt32(transform.position.x) == gridX && Convert.ToInt32(transform.position.y - 1) == gridY)
-                {
-                    fallControl = false;
-                }
-            }
-            if (fallControl)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, _mytargetV3, 50 * Time.fixedDeltaTime);
-                if (Mathf.Approximately(transform.position.x, _mytargetV3.x) && Mathf.Approximately(transform.position.y, _mytargetV3.y))
-                {
-                    transform.position = _mytargetV3;
-                }
-            }
-        }
+         if (_startV3.y > 0 && _mytargetV3.y >= 0)
+         {
+             bool fallControl = true;
+             foreach (var grid in _myGridBox)
+             {
+                 int gridX = Convert.ToInt32(grid.transform.position.x);
+                 int gridY = Convert.ToInt32(grid.transform.position.y);
+                 if (Convert.ToInt32(transform.position.x) == gridX && Convert.ToInt32(transform.position.y - 1) == gridY)
+                 {
+                     fallControl = false;
+                 }
+             }
+             if (fallControl)
+             {
+                 transform.position = Vector3.MoveTowards(transform.position, _mytargetV3, 50 * Time.fixedDeltaTime);
+                 if (Mathf.Approximately(transform.position.x, _mytargetV3.x) && Mathf.Approximately(transform.position.y, _mytargetV3.y))
+                 {
+                     transform.position = _mytargetV3;
+                 }
+             }
+         }
     }
 
     private void UpdatePosition()

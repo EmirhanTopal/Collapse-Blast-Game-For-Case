@@ -1,13 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
-using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class GridManager : MonoBehaviour
@@ -75,12 +70,7 @@ public class GridManager : MonoBehaviour
         NewGridBoxMain();
         StartCoroutine(WaitAndUpdate());
     }
-
-    public void QuitGame()
-    {
-        // çalışmıyor - UI scriptte 2 - 1 durumlarında çalışmıyor - optimizasyon
-        //Application.Quit();
-    }
+    
     public void ShuffleGrid()
     {
         List<GameObject> boxes = new List<GameObject>(_gridBox);
@@ -108,6 +98,8 @@ public class GridManager : MonoBehaviour
         _test = IntBoxGroupHelp();
         CheckGameOver(_test);
     }
+    
+    // kendi update methodu yazılacak ve game over kontrolü eklenecek
     private void CheckGameOver(int testParam)
     {
         Debug.Log(testParam);
