@@ -157,17 +157,17 @@ public class UIScript : MonoBehaviour
             panel.SetActive(true);
             textMeshProUGUI.text = "Please enter a Color number under 6 and below 1";
         }
-        else if (StringA > _totalBox || StringA <= 0)
+        else if (StringA > _totalBox || StringA < 0)
         {
             panel.SetActive(true);
             textMeshProUGUI.text = $"Please enter a 'A' number under {_totalBox} and below 0";
         }
-        else if (StringB > _totalBox || StringB <= 0)
+        else if (StringB > _totalBox || StringB < 0)
         {
             panel.SetActive(true);
             textMeshProUGUI.text = $"Please enter a 'B' number under {_totalBox} and below 0";
         }
-        else if (StringC > _totalBox || StringC <= 0)
+        else if (StringC > _totalBox || StringC < 0)
         {
             panel.SetActive(true);
             textMeshProUGUI.text = $"Please enter a 'C' number under {_totalBox} and below 0";

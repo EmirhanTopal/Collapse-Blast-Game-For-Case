@@ -49,6 +49,9 @@ public class GridManager : MonoBehaviour
     {
         get { return _changeC; }
     }
+
+    private float tempTime = 0.2f;
+    private float durationTime;
     
     private void Start()
     {
@@ -71,6 +74,79 @@ public class GridManager : MonoBehaviour
         StartCoroutine(WaitAndUpdate());
     }
     
+    private bool CheckForPossibleMatches()
+    {
+        foreach (var grid in _gridBox)
+        {
+            var box = grid.GetComponent<BoxManager>();
+            if (box == null)
+                continue;
+            
+            foreach (var neighbor in GetNeighbors(box))
+            {
+                if (neighbor.ColorNumber == box.ColorNumber)
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+    private List<BoxManager> GetNeighbors(BoxManager box)
+    {
+        List<BoxManager> neighbors = new List<BoxManager>();
+        foreach (var grid in _gridBox)
+        {
+            var neighbor = grid.GetComponent<BoxManager>();
+            if (neighbor == null || neighbor == box)
+                continue;
+            
+            if (Mathf.Approximately(Mathf.Abs(neighbor.transform.position.x - box.transform.position.x) + Mathf.Abs(neighbor.transform.position.y - box.transform.position.y), 1))
+            {
+                neighbors.Add(neighbor);
+            }
+        }
+
+        return neighbors;
+    }
+
+    public void ShuffleGridSmart()
+    {
+        bool matchFound = false;
+        
+        for (int i = 0; i < _gridBox.Count; i++)
+        {
+            for (int j = i + 1; j < _gridBox.Count; j++)
+            {
+                SwapBoxes(i, j);
+
+                if (CheckForPossibleMatches())
+                {
+                    matchFound = true;
+                    break;
+                }
+
+                SwapBoxes(i, j);
+            }
+
+            if (matchFound)
+                break;
+        }
+
+
+        if (!matchFound)
+        {
+            Debug.Log("No matches found, performing random shuffle.");
+            ShuffleGrid();
+        }
+    }
+
+    private void SwapBoxes(int indexA, int indexB)
+    {
+        var tempPos = _gridBox[indexA].transform.position;
+        _gridBox[indexA].transform.position = _gridBox[indexB].transform.position;
+        _gridBox[indexB].transform.position = tempPos;
+    }
+
     public void ShuffleGrid()
     {
         List<GameObject> boxes = new List<GameObject>(_gridBox);
@@ -99,13 +175,12 @@ public class GridManager : MonoBehaviour
         CheckGameOver(_test);
     }
     
-    // kendi update methodu yazılacak ve game over kontrolü eklenecek
     private void CheckGameOver(int testParam)
     {
         Debug.Log(testParam);
         if (testParam <= 0)
         {
-            ShuffleGrid();
+            ShuffleGridSmart();
         }
         _groupCounts.Clear();
     }
