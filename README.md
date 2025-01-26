@@ -1,6 +1,6 @@
 # Collapse-Blast-Game-For-Case
 
-**** Emirhan Topal Case Project ****
+**** Emirhan Topal ****
 
 **** Screen Resolution : 1920 X 1080 ****
 
