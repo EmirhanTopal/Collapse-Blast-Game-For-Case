@@ -14,8 +14,8 @@ Once blocks are removed, the empty spaces are filled by falling blocks from abov
 
 Unity Version 2022.3.18f1
 
-****
-Game Screen
+
+**** Game Screen ****
 ![ezgif com-webp-to-gif-converter](https://github.com/user-attachments/assets/e2462066-5f48-499f-8612-a98c55b1a379)
 ![20250126-1036-11 3981128-ezgif com-gif-to-mp4-converter](https://github.com/user-attachments/assets/71d15b73-0bbb-4597-9ad9-0f2a8ee71633)
 
