@@ -9,7 +9,6 @@ public class GridManager : MonoBehaviour
 {
     [SerializeField] private List<GameObject> gridBackground = new List<GameObject>();
     [SerializeField] private BoxFeatures features;
-    [SerializeField] private GameObject panel;
     
     private List<int> _groupCounts = new List<int>();
     private List<GameObject> _gridBox = new List<GameObject>();
@@ -49,9 +48,6 @@ public class GridManager : MonoBehaviour
     {
         get { return _changeC; }
     }
-
-    private float tempTime = 0.2f;
-    private float durationTime;
     
     private void Start()
     {
