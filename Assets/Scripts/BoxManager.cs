@@ -34,12 +34,10 @@ public class BoxManager : MonoBehaviour
         _startV3 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         UpdatePosition();
     }
-
-
+    
     private void Update()
     {
         UpdatePosition();
-        
     }
     private void FixedUpdate()
     {

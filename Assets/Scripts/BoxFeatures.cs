@@ -45,8 +45,6 @@ public class BoxFeatures : MonoBehaviour
      [SerializeField] private GridManager gridManager;
      [SerializeField] private int speed;
      
-     
-     
      public Sprite[] Ateam
      {
           get { return _aTeam; }

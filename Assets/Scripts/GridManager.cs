@@ -105,7 +105,6 @@ public class GridManager : MonoBehaviour
                 neighbors.Add(neighbor);
             }
         }
-
         return neighbors;
     }
 
@@ -131,8 +130,6 @@ public class GridManager : MonoBehaviour
             if (matchFound)
                 break;
         }
-
-
         if (!matchFound)
         {
             Debug.Log("No matches found, performing random shuffle.");
@@ -177,7 +174,6 @@ public class GridManager : MonoBehaviour
     
     private void CheckGameOver(int testParam)
     {
-        Debug.Log(testParam);
         if (testParam <= 0)
         {
             ShuffleGridSmart();
